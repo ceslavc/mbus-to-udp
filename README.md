@@ -7,4 +7,4 @@ This is a complete converter - circuit, pcb, housing and a software. It is made 
 
 ## Language note
 
-As the unit is designed for Norwegian power grid there is more detailed description in the norwegian language. I will translate if there will be interest for it.
+As the unit is designed for Norwegian power grid there is more detailed description in the norwegian README. I will translate if there will be interest for it.
