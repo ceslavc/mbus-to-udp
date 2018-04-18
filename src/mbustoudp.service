@@ -1,0 +1,10 @@
+[Unit]
+Description=Converter from mbus to udp
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mbustoudp <ip_address> <port>
+
+[Install]
+WantedBy=multi-user.target

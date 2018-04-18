@@ -3,7 +3,7 @@
   (general
     (links 29)
     (no_connects 0)
-    (area 15.096 16.447 169.464001 133.846857)
+    (area 96.417 67.537 169.464001 133.846857)
     (thickness 1.6)
     (drawings 10)
     (tracks 105)
@@ -808,7 +808,7 @@
     (pad "" np_thru_hole circle (at 0 0 90) (size 5 5) (drill 2.5) (layers *.Cu *.Mask))
   )
 
-  (gr_text " This file is part of mbus-to-udp.\n\n    mbus-to-udp is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    mbus-to-udp is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with mbus-to-udp.  If not, see <http://www.gnu.org/licenses/>." (at 15.096 34.222) (layer Eco1.User)
+  (gr_text " This file is part of mbus-to-udp.\n\n    mbus-to-udp is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    mbus-to-udp is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with Foobar.  If not, see <http://www.gnu.org/licenses/>." (at 15.096 34.222) (layer Eco1.User)
     (effects (font (size 1.5 1.5) (thickness 0.3)) (justify left))
   )
   (gr_text CC201802v1 (at 167.369 91.88 90) (layer F.Cu)
