@@ -224,6 +224,20 @@ void il3(void)
 	return;
 }
 
+void a14(void)
+{
+	int i;
+	char c,cc;
+	// printf("\nForbruk: ");
+	for (i=0;i<7;i++) read(uart, &c, 1);
+	read(uart, &cc, 1);
+	i=(c*256+cc);
+	sprintf(msg,"{\"data\":\"used\",\"value\":%i,\"scale\":1,\"topic\":\"AMS\"}",i);
+	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
+	return;
+}
+
+
 void ul1(void)
 {
 	int i;
@@ -282,17 +296,19 @@ while (1) {
 						else if (c==2) p23();
 						else if (c==3) q12();
 						else if (c==4) q34();
+						else if (c==8) a14();
 						else if (c==31) il1();
 						else if (c==51) il2();
 						else if (c==71) il3();
 						else if (c==32) ul1();
 						else if (c==52) ul2();
 						else if (c==72) ul3();
-						}	
+						}
+					}	
 				} 
 			}
-		}
-}
+	}
+
 
 return;
 }

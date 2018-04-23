@@ -35,7 +35,7 @@ Use regular ```make``` commands to build and install the utility.
 
 Before installing you must edit the ```mbustoudp.service``` file. Replace ```ip_address``` and ```port``` with address and port of your Node Red server.
 
-```sudo make install``` will copy files to their locations and starts andd enables the service. Must be run as root.
+```sudo make install``` will copy files to their locations and starts and enables the service. Must be run as root.
 
 Service will be stopped, disabled and all the files will be removed with ```sudo make clean```
 
