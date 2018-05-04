@@ -65,5 +65,36 @@ Example (from Kamstrup documentation)
 0906 0101040800FF 0600000000
 C8867E
 ```
-The interesting data start on line 7. Every data line starts with 0906, then the OBIS code and a data block. Different blocks for different data. 
+The interesting data start on line 7. Every data line starts with 0906, then the OBIS code and a data block. 
 
+## JSON object
+
+There is one object for every value received from the meter. I have choosen this way rather than sending all the data in one object. This way some data will be sent if there is a transmission error. Also the program may be also used for one-phase meters.
+
+The object is defined as such:
+```
+data : (string)
+value : (float value)
+topic : "AMS"              
+```
+```data``` is a string, it identificates what kind of data is sent
+ID|Obis code|Explanation
+--|---------|-----------
+power|P14|Power (W) consumed from the grid at the moment
+powerto|P23|Power (W) delivered to the grid
+rpower|Q12|Reactive power (var) consumed from the grid
+rpowerto|Q34|Reactive power (var) delivered to the grid
+pcons|A14|Cumulative consumed power (Wh)
+pdelv|A23|Cumulative delivered power (Wh)
+rpcons|R12|Cumulative consumed reactive power (varh)
+rpdelv|R34|Cumulative delivered reactive power (varh)
+amp1|IL1|Current phase 1 (A)
+amp2|IL2|Current phase 2 (A)
+amp3|IL3|Current phase 3 (A)
+vol1|UL1|Voltage phase/line 1 (V)
+vol2|UL2|Voltage phase/line 2 (V)
+vol3|UL3|Voltage phase/line 3 (V)
+
+```value``` is a float value
+
+```topic``` is a string value "AMS" that allows node red to sort packets according to which device sent them. Effectively it is possible to use the same port and UDP node to receive data from several different devices.

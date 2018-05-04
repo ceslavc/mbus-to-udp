@@ -1,5 +1,5 @@
 /* 
-MBUS to UDP converter v0.8
+MBUS to UDP converter v0.9
 (c) 2018 Ceslav Czyz 
 
 This file is part of mbus-to-udp.
@@ -31,7 +31,7 @@ This file is part of mbus-to-udp.
 
 struct termios gammel_uart;        		// structure to save the state of the serial port
 int uart;                             	// serial port handle
-char *port,*msg;						// filename of the serial port, string for UDP message   
+char *port, *msg;						// filename of the serial port, string for the UDP message
 int sockfd;         					// IP socket for UDP message
 struct addrinfo *nodered;				// stucture to address the data receiver
 
@@ -127,158 +127,25 @@ if (status != 0)
 return 0;
 }
 
-// Direct power
-
-void p14(void)
+void sendjson(int ign, float scale, const char *data_id)
 {
+	int val;
+	char c, cc;
 	int i;
-	char c,cc;
-	//printf("\nPOWER 14: ");
-	for (i=0;i<7;i++) read(uart, &c, 1);
-	read(uart, &cc, 1);
-	i=(c*256+cc);
-	if (i>20000) return;
-	sprintf(msg,"{\"data\":\"power\",\"value\":%i,\"scale\":0,\"topic\":\"AMS\"}",i);
-	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
+	for(i=0;i<ign;i++) read(uart,&c,1);
+	read(uart,&cc,1);							//higher byte
+	read(uart,&c,1);							//lower byte
+	val=(cc*256+c)*scale;						//multiply and scale
+	sprintf(msg,"{\"data\":\"%s\",\"value\":%d,\"topic\":\"AMS\"}",data_id,val);
+	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);	
 	return;
 }
 
-void p23(void)
-{
-	int i;
-	char c,cc;
-	// printf("\nPOWER 23: ");
-	for (i=0;i<7;i++) read(uart, &c, 1);
-	read(uart, &cc, 1);
-	i=(c*256+cc);
-	// printf("%iW\n",i);	
-	// printf("\n");
-	return;
-}
-
-void q12(void)
-{
-	int i;
-	char c,cc;
-	//printf("\nREAKTANS 12: ");
-	for (i=0;i<7;i++) read(uart, &c, 1);
-	read(uart, &cc, 1);
-	i=(c*256+cc);
-	// printf("%iW\n",i);	
-	// printf("\n");
-	return;
-}
-
-void q34(void)
-{
-	int i;
-	char c,cc;
-	// printf("\nREAKTANS 34: ");
-	for (i=0;i<7;i++) read(uart, &c, 1);
-	read(uart, &cc, 1);
-	i=(c*256+cc);
-	// printf("%iW\n",i);	
-	// printf("\n");
-	return;
-}
-
-void il1(void)
-{
-	int i;
-	char c,cc;
-	// printf("\nStrøm fase 1: ");
-	for (i=0;i<7;i++) read(uart, &c, 1);
-	read(uart, &cc, 1);
-	i=c*256+cc;
-	if (i>6000) return;
-	sprintf(msg,"{\"data\":\"amp1\",\"value\":%i,\"scale\":-2,\"topic\":\"AMS\"}",i);
-	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
-	return;
-}
-
-void il2(void)
-{
-	int i;
-	char c,cc;
-	// printf("\nStrøm fase 2: ");
-	for (i=0;i<7;i++) read(uart, &c, 1);
-	read(uart, &cc, 1);
-	i=(c*256+cc);
-	if (i>6000) return;
-	sprintf(msg,"{\"data\":\"amp2\",\"value\":%i,\"scale\":-2,\"topic\":\"AMS\"}",i);
-	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
-	return;
-}
-
-void il3(void)
-{
-	int i;
-	char c,cc;
-	// printf("\nStrøm fase 3: ");
-	for (i=0;i<7;i++) read(uart, &c, 1);
-	read(uart, &cc, 1);
-	i=(c*256+cc);
-	if (i>6000) return;
-	sprintf(msg,"{\"data\":\"amp3\",\"value\":%i,\"scale\":-2,\"topic\":\"AMS\"}",i);
-	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
-	return;
-}
-
-void a14(void)
-{
-	int i;
-	char c,cc;
-	// printf("\nForbruk: ");
-	for (i=0;i<7;i++) read(uart, &c, 1);
-	read(uart, &cc, 1);
-	i=(c*256+cc);
-	sprintf(msg,"{\"data\":\"used\",\"value\":%i,\"scale\":1,\"topic\":\"AMS\"}",i);
-	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
-	return;
-}
-
-
-void ul1(void)
-{
-	int i;
-	char c;
-	// printf("\nSpenning fase 1: ");
-	for (i=0;i<6;i++) read(uart, &c, 1);
-	if (c>251) return;
-	sprintf(msg,"{\"data\":\"vol1\",\"value\":%i,\"scale\":0,\"topic\":\"AMS\"}",c);
-	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
-	return;
-}
-
-void ul2(void)
-{
-	int i;
-	char c;
-	// printf("\nSpenning fase 2: ");
-	for (i=0;i<6;i++) read(uart, &c, 1);
-	if (c>251) return;
-	sprintf(msg,"{\"data\":\"vol2\",\"value\":%i,\"scale\":0,\"topic\":\"AMS\"}",c);
-	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
-	return;
-}
-
-void ul3(void)
-{
-	int i;
-	char c;
-	// printf("\nSpenning fase 3: ");
-	for (i=0;i<6;i++) read(uart, &c, 1);
-	if (c>251) return;
-	sprintf(msg,"{\"data\":\"vol3\",\"value\":%i,\"scale\":\"A\",\"topic\":\"AMS\"}",c);
-	sendto(sockfd, msg, strlen(msg), 0, nodered->ai_addr, nodered->ai_addrlen);
-	return;
-}
 
 void transceive(void)
 {
-char c;
+char c,c1,c2,c3,c4;
 int n;
-
 msg=(char*)malloc(64);
 
 while (1) {
@@ -287,22 +154,37 @@ while (1) {
 	if (c==9) {
 		read(uart, &c, 1);
 		if (c==6) {					// 9,6 - OBIS code is following
-			read(uart, &c, 1);
-			if (c==1) {				//1 - all other except clock, but who cares about clock
-				read(uart, &c, 1);
-					if (c==1) {		// All codes have 1 here, just checking
-						read(uart, &c, 1);
-						if (c==1) p14();
-						else if (c==2) p23();
-						else if (c==3) q12();
-						else if (c==4) q34();
-						else if (c==8) a14();
-						else if (c==31) il1();
-						else if (c==51) il2();
-						else if (c==71) il3();
-						else if (c==32) ul1();
-						else if (c==52) ul2();
-						else if (c==72) ul3();
+			read(uart, &c1, 1);
+			if (c1==1) {				//1 - all other except clock, but who cares about clock
+				read(uart, &c2, 1);
+					if (c2==1) {		// All codes have 1 here, just checking
+						read(uart, &c3, 1);
+						if (c3==1) {
+							read(uart, &c4,1);						//ACTIVE power FROM grid, check next byte
+							if (c4==7) sendjson(5,1,"power");		//power from grid
+							else if (c4==8) sendjson(5,10,"pcons"); //cummulative consumed power
+						}
+						else if (c3==2) {
+							read(uart, &c4,1);						//ACTIVE power TO grid, check next byte
+							if (c4==7) sendjson(5,1,"powerto");		//power to grid
+							else if (c4==8) sendjson(5,10,"pdelv"); 	//cummulative delivered power
+						}
+						else if (c3==3)  {
+							read(uart, &c4,1);						//REACTIVE power FROM grid, check next byte
+							if (c4==7) sendjson(5,1,"rpower");		//power from grid
+							else if (c4==8) sendjson(5,10,"rpcons"); //cummulative consumed reactive power
+						}
+						else if (c3==4)  {
+							read(uart, &c4,1);						//REACTIVE power TO grid, check next byte
+							if (c4==7) sendjson(5,1,"rpowerto");		//power to grid
+							else if (c4==8) sendjson(5,10,"rpdelv"); //cummulative delivered reactive power
+						}
+						else if (c3==31) sendjson(6,0.01,"amp1");	//current phase 1, divided by 100;
+						else if (c3==51) sendjson(6,0.01,"amp2");	//current phase 2
+						else if (c3==71) sendjson(6,0.01,"amp3");	//current phase 3
+						else if (c3==32) sendjson(4,1,"vol1");		//voltage phase 1, no scaling
+						else if (c3==52) sendjson(4,1,"vol2");		//voltage phase 2
+						else if (c3==72) sendjson(4,1,"vol3");		//voltage phase 3
 						}
 					}	
 				} 
